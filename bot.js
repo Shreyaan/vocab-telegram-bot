@@ -22,7 +22,9 @@ let bot;
 
 bot.onText(/\/start/, (msg) => {
 
-    bot.sendMessage(msg.chat.id, "hi to use me send /word anyword to gets its definition");
+    bot.sendMessage(msg.chat.id, `/word - send /word plus the word whose definition you want 
+
+    /random- send this to get definition of a random word`);
     
     });
 
