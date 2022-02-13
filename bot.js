@@ -51,9 +51,9 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 });
 bot.onText(/\/random /, (msg) => {
   const chatId = msg.chat.id;
-  // const word = match[1];
+  const word = randomWords({exactly:1, wordsPerString:1});
   axios
-    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${randomWords()}`, {
+    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
       params: {
         fields: 'definitions',
         strictMatch: 'false'
