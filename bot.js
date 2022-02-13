@@ -65,8 +65,11 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 });
 bot.onText(/\/random/, (msg) => {
   let lineNo = getRandomInt(0, 5348);
-  let wordLine = nthline(lineNo, filePath);
-  let parts = wordLine.split('\t');
+  let parts;
+  // let wordLine = nthline(lineNo, filePath);
+  nthline(lineNo, filePath).then(line => { parts = line.split('\t');})
+
+  // let parts = wordLine.split('\t');
   let randomWord= parts[0];
   let randomWordDef=parts[1];
 
