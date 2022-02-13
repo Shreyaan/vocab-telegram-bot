@@ -49,7 +49,7 @@ bot.onText(/\/word (.+)/, (msg, match) => {
       bot.sendMessage(chatId, errorText, { parse_mode:'HTML'})
     });
 });
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/random/, (msg) => {
   const chatId = msg.chat.id;
   const word = randomWords({exactly:1, wordsPerString:1});
   axios
