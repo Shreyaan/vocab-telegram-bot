@@ -49,11 +49,11 @@ bot.onText(/\/word (.+)/, (msg, match) => {
       bot.sendMessage(chatId, errorText, { parse_mode:'HTML'})
     });
 });
-bot.onText(/\/random/, (msg, match) => {
+bot.onText(/\/random /, (msg) => {
   const chatId = msg.chat.id;
-  const word = match[1];
+  // const word = match[1];
   axios
-    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${randomWords({exactly:1, wordsPerString:1})}`, {
+    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${randomWords()}`, {
       params: {
         fields: 'definitions',
         strictMatch: 'false'
