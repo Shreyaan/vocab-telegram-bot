@@ -52,7 +52,7 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 });
 bot.onText(/\/random/, (msg) => {
   const chatId = msg.chat.id;
-  const word = Math.floor(Math.random() * allWords.length);
+  const word = allWords[Math.floor(Math.random() * allWords.length)];
   axios
     .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
       params: {
