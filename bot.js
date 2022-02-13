@@ -4,6 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 // This file would be created soon
 const parser = require('./parser.js');
+const allWords = require('./allWords.js');
 
 require('dotenv').config();
 var randomWords = require('random-words');
@@ -51,7 +52,7 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 });
 bot.onText(/\/random/, (msg) => {
   const chatId = msg.chat.id;
-  const word = randomWords({exactly:1, wordsPerString:1});
+  const word = Math.floor(Math.random() * allWords.length);
   axios
     .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
       params: {
