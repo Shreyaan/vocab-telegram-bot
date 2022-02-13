@@ -2,4 +2,4 @@ const allWords =["a", "aa", "aaa", "aaron", "ab", "abandoned", "abc", "aberdeen"
 
 
 
-export {  allWords };
+module.exports = allWords
