@@ -7,7 +7,18 @@ const parser = require('./parser.js');
 const allWords = require('./allWords.js');
 
 require('dotenv').config();
-var randomWords = require('random-words');
+
+const nthline = require('nthline');
+const filePath = __dirname + '/words.csv';
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
+// exports.printWord = async function printWord() {
+ 
 
 
 const token = process.env.TELEGRAM_TOKEN;
@@ -53,27 +64,17 @@ bot.onText(/\/word (.+)/, (msg, match) => {
     });
 });
 bot.onText(/\/random/, (msg) => {
-  const chatId = msg.chat.id;
-  const word = allWords[Math.floor(Math.random() * allWords.length)];
-  axios
-    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
-      params: {
-        fields: 'definitions',
-        strictMatch: 'false'
-      },
-      headers: {
-        app_id: process.env.OXFORD_APP_ID,
-        app_key: process.env.OXFORD_APP_KEY
-      }
-    })
-    .then(response => {
-      const parsedHtml = parser(response.data);
-      bot.sendMessage(chatId, parsedHtml, { parse_mode: 'HTML' });
-    })
-    .catch(error => {
-      const errorText = error.response.status === 404 ? `No definition found for the word: <b>${word}</b>` : `<b>An error occured, please try again later</b>`;
-      bot.sendMessage(chatId, errorText, { parse_mode:'HTML'})
-    });
+  let lineNo = getRandomInt(0, 5348);
+  let wordLine = await nthline(lineNo, filePath);
+  let parts = wordLine.split('\t');
+  let randomWord= parts[0];
+  let randomWordDef=parts[1];
+
+  bot.sendMessage(msg.chat.id, `word:
+  ${randomWord}
+  
+  Definition:
+  ${randomWordDef}`);
 });
 
 // bot.js
