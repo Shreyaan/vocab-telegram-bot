@@ -49,7 +49,7 @@ function mainEntriesToHtml(entries) {
     }).join('');
   
     return `
-    Word: <b>${json.word}</b>
+   Random Word: <b>${json.word}</b>
     <b>${definitionCount}</b> definition(s) found for the word: <b>${json.word}</b>
   
     ${parsedHtml}`
