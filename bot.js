@@ -9,7 +9,7 @@ const allWords = require('./allWords.js');
 require('dotenv').config();
 
 const nthline = require('nthline');
-const filePath = __dirname + '/words.csv';
+const filePath =require('./words.csv');
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
