@@ -4,12 +4,16 @@ const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 // This file would be created soon
 const parser = require('./parser.js');
-const allWords = require('./allWords.js');
+// const allWords = require('./allWords.js');
 
 require('dotenv').config();
 
-const nthline = require('nthline');
-const filePath =require('./words.csv');
+// const nthline = require('nthline');
+const filePath =('./words.csv');
+
+const csv = require('csv-parser')
+const fs = require('fs')
+const results = [];
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -24,12 +28,12 @@ function getRandomInt(min, max) {
 const token = process.env.TELEGRAM_TOKEN;
 let bot;
 
-// if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
    bot = new TelegramBot(token);
    bot.setWebHook(process.env.HEROKU_URL + bot.token);
-// } else {
-//    bot = new TelegramBot(token, { polling: true });
-// }
+} else {
+   bot = new TelegramBot(token, { polling: true });
+}
 
 bot.onText(/\/start/, (msg) => {
 
@@ -65,19 +69,34 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 });
 bot.onText(/\/random/, (msg) => {
   let lineNo = getRandomInt(0, 5348);
-  let parts;
-  // let wordLine = nthline(lineNo, filePath);
-  nthline(lineNo, filePath).then(line => { parts = line.split('\t');})
+  // let parts;
+  // // let wordLine = nthline(lineNo, filePath);
+  // nthline(lineNo, filePath).then(line => { parts = line.split('\t');})
 
-  // let parts = wordLine.split('\t');
-  let randomWord= parts[0];
-  let randomWordDef=parts[1];
-
-  bot.sendMessage(msg.chat.id, `word:
-  ${randomWord}
+  // // let parts = wordLine.split('\t');
   
-  Definition:
-  ${randomWordDef}`);
+  
+  let randomWord;
+  let randomWordDef;
+
+  fs.createReadStream('words.csv')
+  .pipe(csv({ separator: '\t'}))
+  .on('data', (data) => results.push(data))
+  .on('end', () => {
+    // console.log(results[100]);
+
+    randomWord= results[lineNo]['word']
+    randomWordDef= results[lineNo]['definition']
+    bot.sendMessage(msg.chat.id, `Random Word:
+${randomWord}
+  
+Definition:
+${randomWordDef}`);
+    
+  });
+
+ 
+
 });
 
 // bot.js
