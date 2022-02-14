@@ -1,7 +1,5 @@
-# vocab-telegram-bot
+# Telegram Vocabulary and Definition Bot
 **This telegram bot gives you definitions of words or will give you random words with definitions to increase your vocabulary**
-
-got the csv file of words from https://www.npmjs.com/package/learn-a-word
 
 ## Features
 /word (word) for definition of a word
@@ -18,7 +16,6 @@ got the csv file of words from https://www.npmjs.com/package/learn-a-word
 ## Install the dependencies:
 Before running the below command, make sure you're in the project directory that
 you've just cloned!!
-
 ```bash
 > npm install
 ```
@@ -29,3 +26,7 @@ You can get Oxford api url,key and app id from https://developer.oxforddictionar
 
 ```bash
 > npm start
+```
+
+## Special Thanks to
+* https://www.npmjs.com/package/learn-a-word for csv file
