@@ -66,8 +66,18 @@ bot.onText(/\/word (.+)/, (msg, match) => {
     .then(function (response) {
       let responseData = response.data;
       let wordResponse = responseData["word"];
-      let categoryWord = responseData["definitions"][0]["partOfSpeech"];
-      let firstDef = responseData["definitions"][0]["definition"];
+      // let categoryWord = responseData["definitions"][0]["partOfSpeech"];
+      // let firstDef = responseData["definitions"][0]["definition"];
+      let definationString;
+
+      responseData["definitions"].forEach((element, index) => {
+        definationString += `${++index}:
+CATEGORY: ${element.partOfSpeech}
+DEFINITION:${element.defination}
+
+
+        `;
+      });
 
       bot.sendMessage(
         chatId,
@@ -75,26 +85,9 @@ bot.onText(/\/word (.+)/, (msg, match) => {
 
 ${responseData["definitions"].length} definition(s) found for the word
 
-CATEGORY: ${categoryWord}
-
-DEFINITION: ${firstDef}
+Definition(s): ${definationString}
          `
       );
-
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
-      sleep(700).then(() => {
-        responseData["definitions"].shift();
-        responseData["definitions"].forEach((element, index) => {
-          let thisIndex = index + 2;
-          bot.sendMessage(
-            chatId,
-            ` definition number ${thisIndex}: ${element["definition"]} `
-          );
-        });
-      });
     })
     .catch(function (error) {
       if (error.response.status == 404) {
