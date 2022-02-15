@@ -47,26 +47,46 @@ bot.onText(/\/word (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const word = match[1];
   axios
-    .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
-      params: {
-        fields: "definitions",
-        strictMatch: "false",
-      },
+    // .get(`${process.env.OXFORD_API_URL}/entries/en-gb/${word}`, {
+    //   params: {
+    //     fields: "definitions",
+    //     strictMatch: "false",
+    //   },
+    //   headers: {
+    //     app_id: process.env.OXFORD_APP_ID,
+    //     app_key: process.env.OXFORD_APP_KEY,
+    //   },
+    // })
+    // .then((response) => {
+    //   const parsedHtml = parser(response.data);
+    //   bot.sendMessage(chatId, parsedHtml, { parse_mode: "HTML" });
+    // })
+    // .catch((error) => {
+    //   const errorText =
+    //     error.response.status === 404
+    //       ? `get rekt 🔥🔥🔥 coz definition not found for the word: <b>${word}</b>`
+    //       : `<b>An error occured, please try again later</b>`;
+    //   bot.sendMessage(chatId, errorText, { parse_mode: "HTML" });
+    // });
+
+    var options = {
+      method: 'GET',
+      url: `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`,
       headers: {
-        app_id: process.env.OXFORD_APP_ID,
-        app_key: process.env.OXFORD_APP_KEY,
-      },
-    })
-    .then((response) => {
-      const parsedHtml = parser(response.data);
-      bot.sendMessage(chatId, parsedHtml, { parse_mode: "HTML" });
-    })
-    .catch((error) => {
-      const errorText =
-        error.response.status === 404
-          ? `get rekt 🔥🔥🔥 coz definition not found for the word: <b>${word}</b>`
-          : `<b>An error occured, please try again later</b>`;
-      bot.sendMessage(chatId, errorText, { parse_mode: "HTML" });
+        'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
+        'x-rapidapi-key': 'db62831c7cmshea0b63b2012e4f9p1b9665jsnc7a6ebb0abab'
+      }
+    };
+    
+    axios.request(options).then(function (response) {
+      // console.log(response.data);
+      // bot.sendMessage(chatId, parsedHtml, { parse_mode: "HTML" });
+      bot.sendMessage(chatId, response.data);
+      
+    }).catch(function (error) {
+      console.error(error);
+      bot.sendMessage(chatId, error);
+
     });
 });
 
