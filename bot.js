@@ -136,10 +136,7 @@ bot.onText(/\/urban (.+)/, (msg, match) => {
       let responseData = response.data;
       let defination = responseData["list"][0]["definition"];
       let example = responseData["list"][0]["example"];
-      defination.replace('[', '');
-      defination.replace(']', '');
-      example.replace('[', '');
-      example.replace(']', '');
+
       if (numberOfDef == null || numberOfDef == undefined) {
         bot.sendMessage(
           chatId,
@@ -150,6 +147,11 @@ ${responseData["list"].length} definition(s) found for the word
 DEFINITION: ${defination}
 
 Example: ${example}
+
+
+
+** please ignore "["  , "]" thats an issue with api cant fix it :/ 
+
     `
         );
       } else {
