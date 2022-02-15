@@ -43,8 +43,6 @@ bot.onText(/\/start/, (msg) => {
 /random- send this to get definition of a random word
 
 /urban- get definition from Urban Dictionary`
-
-
   );
 });
 
@@ -52,132 +50,141 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/word (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const word = match[1];
+  axios;
+
+  var options = {
+    method: "GET",
+    url: `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`,
+    headers: {
+      "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+      "x-rapidapi-key": RapidApitoken,
+    },
+  };
+
   axios
-    
-    var options = {
-      method: 'GET',
-      url: `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`,
-      headers: {
-        'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-        'x-rapidapi-key': RapidApitoken
-      }
-    };
-    
-    axios.request(options).then(function (response) {
-      let responseData = response.data
-      let wordResponse=responseData['word']
-      let categoryWord = responseData['definitions'][0]['partOfSpeech']
-      let firstDef=responseData['definitions'][0]['definition']
-     
-      
+    .request(options)
+    .then(function (response) {
+      let responseData = response.data;
+      let wordResponse = responseData["word"];
+      let categoryWord = responseData["definitions"][0]["partOfSpeech"];
+      let firstDef = responseData["definitions"][0]["definition"];
 
-         bot.sendMessage(chatId, `Word: ${wordResponse}
+      bot.sendMessage(
+        chatId,
+        `Word: ${wordResponse}
 
-${responseData['definitions'].length} definition(s) found for the word
+${responseData["definitions"].length} definition(s) found for the word
 
 CATEGORY: ${categoryWord}
 
 DEFINITION: ${firstDef}
-         ` );
-
-         function sleep(ms) {
-          return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        sleep(700).then(() => { responseData['definitions'].shift()
-        responseData['definitions'].forEach((element, index) => {
-          let thisIndex = index +2
-         bot.sendMessage(chatId, ` definition number ${thisIndex}: ${element['definition']} ` )
-        });
-       });
-         
-      
-    }).catch(function (error) {
-      if(error.response.status== 404){
-        
-      bot.sendMessage(chatId, `lmao rekt 🔥🔥
-word not defined in this try to use /urban command 
-      `
+         `
       );
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
-    else{
-      bot.sendMessage(chatId, `there has been an unexpected error
+      sleep(700).then(() => {
+        responseData["definitions"].shift();
+        responseData["definitions"].forEach((element, index) => {
+          let thisIndex = index + 2;
+          bot.sendMessage(
+            chatId,
+            ` definition number ${thisIndex}: ${element["definition"]} `
+          );
+        });
+      });
+    })
+    .catch(function (error) {
+      if (error.response.status == 404) {
+        bot.sendMessage(
+          chatId,
+          `lmao rekt 🔥🔥
+word not defined in this try to use /urban command 
+      `
+        );
+      } else {
+        bot.sendMessage(
+          chatId,
+          `there has been an unexpected error
 ${error} 
 please contact dev at @bruh7814
       `
-      );
-    }
-   
+        );
+      }
     });
-
-   
-
 });
-
 
 bot.onText(/\/urban (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const word = match[1];
-  let numberOfDef
-  if(match[2] == '1' || match[2] == '2' || match[2] == '3' || match[2] == '4' || match[2] == '5' || match[2] == '6' || match[2] == '7' || match[2] == '8' || match[2] == '9' )
-  {numberOfDef = match[2];}
+  let numberOfDef;
+  // if(match[2] == '1' || match[2] == '2' || match[2] == '3' || match[2] == '4' || match[2] == '5' || match[2] == '6' || match[2] == '7' || match[2] == '8' || match[2] == '9' )
+  // {numberOfDef = match[2];}
+
+  // note -add number detection this upper part was for that but doest work
+
+  axios;
+
+  var options = {
+    method: "GET",
+    url: "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
+    params: { term: word },
+    headers: {
+      "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
+      "x-rapidapi-key": RapidApitoken,
+    },
+  };
 
   axios
-    
-  var options = {
-    method: 'GET',
-    url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
-    params: {term: word},
-    headers: {
-      'x-rapidapi-host': 'mashape-community-urban-dictionary.p.rapidapi.com',
-      'x-rapidapi-key': RapidApitoken
-    }
-  };
-  
-  axios.request(options).then(function (response) {
-   let responseData = response.data
-   let defination = responseData["list"][0]['definition']
-   let example = responseData["list"][0]['example']
+    .request(options)
+    .then(function (response) {
+      let responseData = response.data;
+      let defination = responseData["list"][0]["definition"];
+      let example = responseData["list"][0]["example"];
 
-   if(numberOfDef == null || numberOfDef == undefined){
-    bot.sendMessage(chatId, `Word: ${word}
+      if (numberOfDef == null || numberOfDef == undefined) {
+        bot.sendMessage(
+          chatId,
+          `Word: ${word}
 
-${responseData['list'].length} definition(s) found for the word
+${responseData["list"].length} definition(s) found for the word
 
 DEFINITION: ${defination}
 
 Example: ${example}
 
 
-    ** please ignore "[" ,"]" thats an issue with api cant fix it :/ 
 
-    ` );
-   }
+** please ignore "["  , "]" thats an issue with api cant fix it :/ 
 
-   else{
-     numberOfDef =parseInt(numberOfDef)
-    bot.sendMessage(chatId, `Word: ${word}
-${responseData['list'].length} definition(s) found for the word
+    `
+        );
+      } else {
+        numberOfDef = parseInt(numberOfDef);
+        bot.sendMessage(
+          chatId,
+          `Word: ${word}
+${responseData["list"].length} definition(s) found for the word
 
-DEFINITION: ${responseData["list"][++numberOfDef]['definition']}
+DEFINITION: ${responseData["list"][++numberOfDef]["definition"]}
 
 Example: ${example}
 
 
-    ` );
-
-   }
-
-  }).catch(function (error) {
-    console.log(error)
-    bot.sendMessage(chatId, `lmao rekt 🔥🔥
+    `
+        );
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      bot.sendMessage(
+        chatId,
+        `lmao rekt 🔥🔥
 word not defined`
-  );
-  });
-
-   
-
+      );
+    });
 });
 
 // gives random word
