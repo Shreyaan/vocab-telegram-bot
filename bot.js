@@ -23,6 +23,7 @@ function getRandomInt(min, max) {
 }
 
 const token = process.env.TELEGRAM_TOKEN;
+const RapidApitoken = process.env.rapid;
 let bot;
 
 if (process.env.NODE_ENV === "production") {
@@ -68,26 +69,33 @@ bot.onText(/\/word (.+)/, (msg, match) => {
     //       : `<b>An error occured, please try again later</b>`;
     //   bot.sendMessage(chatId, errorText, { parse_mode: "HTML" });
     // });
-
+    let responseDef
     var options = {
       method: 'GET',
       url: `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`,
       headers: {
         'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com',
-        'x-rapidapi-key': 'db62831c7cmshea0b63b2012e4f9p1b9665jsnc7a6ebb0abab'
+        'x-rapidapi-key': RapidApitoken
       }
     };
     
     axios.request(options).then(function (response) {
       // console.log(response.data);
-      // bot.sendMessage(chatId, parsedHtml, { parse_mode: "HTML" });
-      bot.sendMessage(chatId, response.data);
+       responseDef  = response.data
+       console.log(responseDef['word'])
+       responseDef['definitions'].forEach(element => {console.log(typeof(element))});
+
+         bot.sendMessage(chatId, 'wait i m on a break come back an hour later');
+        //  bot.sendMessage(chatId, parsedHtml, { parse_mode: "HTML" });
       
     }).catch(function (error) {
       console.error(error);
-      bot.sendMessage(chatId, error);
+      // bot.sendMessage(chatId, error);
 
     });
+
+   
+
 });
 
 // gives random word
