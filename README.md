@@ -6,6 +6,8 @@
 
 /random for random word
 
+/urban- get definition from Urban Dictionary
+
 # How to use
 ## Clone this project
 
