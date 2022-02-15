@@ -68,13 +68,13 @@ bot.onText(/\/word (.+)/, (msg, match) => {
       let wordResponse = responseData["word"];
       // let categoryWord = responseData["definitions"][0]["partOfSpeech"];
       // let firstDef = responseData["definitions"][0]["definition"];
-      let definationString;
+      let definationString =''
 
       responseData["definitions"].forEach((element, index) => {
-        definationString += `${++index}:
+        definationString += `
+${++index}:
 CATEGORY: ${element.partOfSpeech}
-DEFINITION:${element.defination}
-
+DEFINITION:${element.definition}
 
         `;
       });
