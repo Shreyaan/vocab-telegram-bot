@@ -85,7 +85,7 @@ Example: ${example}
       console.log(error);
       bot.sendMessage(
         chatId,
-        `Sorry no definition found 😞😞
+        `Sorry no definition found in Urban Dictionary😞😞
         `
       );
     });
@@ -156,8 +156,7 @@ DEFINITION:${element.definition}
         );
 
         urbanDic(msg, match);
-      } 
-      else {
+      } else {
         bot.sendMessage(
           chatId,
           `Word: ${wordResponse}
@@ -178,7 +177,7 @@ DEFINITION:${element.definition}
           Trying Urban Dictionary
           `
         );
-        urbanDic(msg, match)
+        urbanDic(msg, match);
       } else {
         bot.sendMessage(
           chatId,
