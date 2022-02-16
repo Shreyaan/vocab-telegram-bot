@@ -23,6 +23,74 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
+function urbanDic(msg, match) {
+  const chatId = msg.chat.id;
+  const word = match[1];
+  let numberOfDef;
+  axios;
+
+  var options = {
+    method: "GET",
+    url: "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
+    params: { term: word },
+    headers: {
+      "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
+      "x-rapidapi-key": RapidApitoken,
+    },
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      let responseData = response.data;
+      let defination = responseData["list"][0]["definition"];
+      let example = responseData["list"][0]["example"];
+
+      if (numberOfDef == null || numberOfDef == undefined) {
+        bot.sendMessage(
+          chatId,
+          `Word: ${word}
+
+${responseData["list"].length} definition(s) found for the word
+
+DEFINITION: ${defination}
+
+Example: ${example}
+
+
+You can see other definitions here: https://www.urbandictionary.com/define.php?term=${encodeURI(
+            word
+          )}
+
+          
+    `
+        );
+      } else {
+        numberOfDef = parseInt(numberOfDef);
+        bot.sendMessage(
+          chatId,
+          `Word: ${word}
+${responseData["list"].length} definition(s) found for the word
+
+DEFINITION: ${responseData["list"][++numberOfDef]["definition"]}
+
+Example: ${example}
+
+
+    `
+        );
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      bot.sendMessage(
+        chatId,
+        `Sorry no definition found 😞😞
+        `
+      );
+    });
+}
+
 const token = process.env.TELEGRAM_TOKEN;
 const RapidApitoken = process.env.rapid;
 let bot;
@@ -66,9 +134,8 @@ bot.onText(/\/word (.+)/, (msg, match) => {
     .then(function (response) {
       let responseData = response.data;
       let wordResponse = responseData["word"];
-      // let categoryWord = responseData["definitions"][0]["partOfSpeech"];
-      // let firstDef = responseData["definitions"][0]["definition"];
-      let definationString =''
+
+      let definationString = "";
 
       responseData["definitions"].forEach((element, index) => {
         definationString += `
@@ -79,24 +146,39 @@ DEFINITION:${element.definition}
         `;
       });
 
-      bot.sendMessage(
-        chatId,
-        `Word: ${wordResponse}
+      if (responseData["definitions"].length <= 0) {
+        bot.sendMessage(
+          chatId,
+          `Sorry no definition found 😞😞
 
-${responseData["definitions"].length} definition(s) found for the word
+          Trying Urban Dictionary
+          `
+        );
 
-Definition(s): ${definationString}
-         `
-      );
+        urbanDic(msg, match);
+      } 
+      else {
+        bot.sendMessage(
+          chatId,
+          `Word: ${wordResponse}
+  
+  ${responseData["definitions"].length} definition(s) found for the word
+  
+  Definition(s): ${definationString}
+           `
+        );
+      }
     })
     .catch(function (error) {
       if (error.response.status == 404) {
         bot.sendMessage(
           chatId,
-          `lmao rekt 🔥🔥
-word not defined in this try to use /urban command 
-      `
+          `Sorry no definition found 😞😞
+
+          Trying Urban Dictionary
+          `
         );
+        urbanDic(msg, match)
       } else {
         bot.sendMessage(
           chatId,
@@ -109,75 +191,9 @@ please contact dev at @bruh7814
     });
 });
 
+//gets word from Urban Dictionary
 bot.onText(/\/urban (.+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const word = match[1];
-  let numberOfDef;
-  // if(match[2] == '1' || match[2] == '2' || match[2] == '3' || match[2] == '4' || match[2] == '5' || match[2] == '6' || match[2] == '7' || match[2] == '8' || match[2] == '9' )
-  // {numberOfDef = match[2];}
-
-  // note -add number detection this upper part was for that but doest work
-
-  axios;
-
-  var options = {
-    method: "GET",
-    url: "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
-    params: { term: word },
-    headers: {
-      "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
-      "x-rapidapi-key": RapidApitoken,
-    },
-  };
-
-  axios
-    .request(options)
-    .then(function (response) {
-      let responseData = response.data;
-      let defination = responseData["list"][0]["definition"];
-      let example = responseData["list"][0]["example"];
-
-      if (numberOfDef == null || numberOfDef == undefined) {
-        bot.sendMessage(
-          chatId,
-          `Word: ${word}
-
-${responseData["list"].length} definition(s) found for the word
-
-DEFINITION: ${defination}
-
-Example: ${example}
-
-
-
-** please ignore "["  , "]" thats an issue with api cant fix it :/ 
-
-    `
-        );
-      } else {
-        numberOfDef = parseInt(numberOfDef);
-        bot.sendMessage(
-          chatId,
-          `Word: ${word}
-${responseData["list"].length} definition(s) found for the word
-
-DEFINITION: ${responseData["list"][++numberOfDef]["definition"]}
-
-Example: ${example}
-
-
-    `
-        );
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      bot.sendMessage(
-        chatId,
-        `lmao rekt 🔥🔥
-word not defined`
-      );
-    });
+  urbanDic(msg, match);
 });
 
 // gives random word
