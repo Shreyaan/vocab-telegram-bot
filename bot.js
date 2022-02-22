@@ -112,7 +112,19 @@ Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
                   );
       })
       .catch((error) => {
-        console.log(error);
+        bot.sendMessage(
+          chatId,
+          `Sorry no definition found😞😞
+ ${error}
+          `
+  
+        );
+  
+        let config = {
+          method: 'get',
+          url: `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${mdapi}`,
+          headers: { }
+        };
       });
 
 
