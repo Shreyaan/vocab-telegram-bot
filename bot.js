@@ -86,6 +86,8 @@ Example: ${example}
       bot.sendMessage(
         chatId,
         `Sorry no definition found in Urban Dictionary😞😞
+
+
 Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
         `
 
@@ -99,7 +101,7 @@ Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
       
       axios(config)
       .then((response) => {
-        let meaning = JSON.stringify(response.data[0]["def"][0].sseq[0][0])
+        let meaning = JSON.stringify(response.data[0]["def"])
         console.log(meaning)
         bot.sendMessage(
                     chatId,
