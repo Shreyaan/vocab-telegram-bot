@@ -86,13 +86,42 @@ Example: ${example}
       bot.sendMessage(
         chatId,
         `Sorry no definition found in Urban Dictionary😞😞
+Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
         `
+
       );
+
+      let config = {
+        method: 'get',
+        url: `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${mdapi}`,
+        headers: { }
+      };
+      
+      axios(config)
+      .then((response) => {
+        let meaning = JSON.stringify(response.data[0]["def"][0].sseq[0][0])
+        console.log(meaning)
+        bot.sendMessage(
+                    chatId,
+                    `Word: ${word}
+            
+            ${meaning}
+            
+         
+                     `
+                  );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+
     });
 }
 
 const token = process.env.TELEGRAM_TOKEN;
 const RapidApitoken = process.env.rapid;
+const mdapi = process.env.mdapi;
 let bot;
 
 if (process.env.NODE_ENV === "production") {
