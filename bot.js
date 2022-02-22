@@ -102,6 +102,8 @@ Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
       axios(config)
       .then((response) => {
         let meaning = JSON.stringify(response.data[0]["def"])
+
+        console.log(response.data[0]["def"])
         console.log(meaning)
         bot.sendMessage(
                     chatId,
