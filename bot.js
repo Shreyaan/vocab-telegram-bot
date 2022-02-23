@@ -88,20 +88,20 @@ Example: ${example}
         `Sorry no definition found in Urban Dictionary😞😞
 
 
-Trying MERRIAM-WEBSTER'S DICTIONARY but be warned its not polished xdddddd
+Trying other sources
         `
 
       );
 
       let config = {
         method: 'get',
-        url: `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${mdapi}`,
+        url: `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
         headers: { }
       };
       
       axios(config)
       .then((response) => {
-        let meaning = JSON.stringify(response.data[0]["def"][0])
+        let meaning = JSON.stringify(response.data["meanings"][0].definitions)
 
         console.log(response.data[0]["def"])
         console.log(meaning)
