@@ -23,8 +23,8 @@ you've just cloned!!
 ```
 
 ### Usage
-Before running this bot, first add OXFORD_API_URL, OXFORD_APP_ID, OXFORD_APP_KEY, TELEGRAM_TOKEN in .env file or in heroku's Config Vars (if you are using heroku remember to also add HEROKU_URL) 
-You can get Oxford api url,key and app id from https://developer.oxforddictionaries.com/ and telegram token from https://t.me/botfather
+Before running this bot, first add rapid api key , TELEGRAM_TOKEN in .env file or in heroku's Config Vars (if you are using heroku remember to also add HEROKU_URL) 
+You can get telegram token from https://t.me/botfather
 
 ```bash
 > npm start
