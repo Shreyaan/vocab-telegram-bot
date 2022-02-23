@@ -15,6 +15,7 @@ const results = [];
 const express = require("express");
 const bodyParser = require("body-parser");
 const { json } = require("body-parser");
+const { query } = require("express");
 const app = express();
 
 function getRandomInt(min, max) {
@@ -83,55 +84,18 @@ Example: ${example}
     })
     .catch(function (error) {
       console.log(error);
+      let querySe = encodeURI(word)
       bot.sendMessage(
         chatId,
         `Sorry no definition found in Urban Dictionary😞😞
 
 
-Trying other sources
+I would suggest you to google it 
+here's the link 
+https://www.google.com/search?q=${querySe}
         `
 
       );
-
-      let config = {
-        method: 'get',
-        url: `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
-        headers: { }
-      };
-      
-      axios(config)
-      .then((response) => {
-        let meaning = JSON.stringify(response.data["meanings"][0].definitions)
-
-        // console.log(response.data[0]["def"])
-        console.log(meaning)
-        bot.sendMessage(
-                    chatId,
-                    `Word: ${word}
-            
-            ${meaning}
-            
-         
-                     `
-                  );
-      })
-      .catch((error) => {
-        bot.sendMessage(
-          chatId,
-          `Sorry no definition found😞😞
- ${error}
-          `
-  
-        );
-  
-        let config = {
-          method: 'get',
-          url: `https://www.dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${mdapi}`,
-          headers: { }
-        };
-      });
-
-
     });
 }
 
