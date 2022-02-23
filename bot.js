@@ -103,7 +103,7 @@ Trying other sources
       .then((response) => {
         let meaning = JSON.stringify(response.data["meanings"][0].definitions)
 
-        console.log(response.data[0]["def"])
+        // console.log(response.data[0]["def"])
         console.log(meaning)
         bot.sendMessage(
                     chatId,
