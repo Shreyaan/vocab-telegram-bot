@@ -45,7 +45,7 @@ function wordnik(msg,match)
 {
   const chatId = msg.chat.id;
   const word = match[1];
-  let numberOfDef;
+  word = word.toLowerCase();
   var axios = require('axios');
 
 var config = {
@@ -77,18 +77,18 @@ axios(config)
 })
 .catch(function (error) {
 
-  let querySe = encodeURI(word)
   bot.sendMessage(
     chatId,
-    `Sorry no definition found
+    `Sorry no definition found 😔😔
 
 
-I would suggest you to google it 
-here's the link 
-https://www.google.com/search?q=${querySe}
+    Trying Urban Dictionary
     `
 
   );
+
+  urbanDic(msg,match)
+
 });
 
 }
@@ -154,16 +154,18 @@ Example: ${example}
     })
     .catch(function (error) {
       console.log(error);
+      let querySe = encodeURI(word)
       bot.sendMessage(
         chatId,
-        `Sorry no definition found in Urban Dictionary😞😞
-
-        trying other dictionary
+        `Sorry no definition found
+    
+    
+    I would suggest you to google it 
+    here's the link 
+    https://www.google.com/search?q=${querySe}
         `
-
+    
       );
-
-      wordnik(msg,match)
     });
 }
 
@@ -214,15 +216,15 @@ DEFINITION:${element.definition}
       });
 
       if (responseData["definitions"].length <= 0) {
-        bot.sendMessage(
-          chatId,
-          `Sorry no definition found 😞😞
+        // bot.sendMessage(
+        //   chatId,
+        //   `Sorry no definition found 😞😞
 
-          Trying Urban Dictionary
-          `
-        );
+        //   Trying Urban Dictionary
+        //   `
+        // );
 
-        urbanDic(msg, match);
+        wordnik(msg, match);
       } else {
         bot.sendMessage(
           chatId,
@@ -237,14 +239,14 @@ DEFINITION:${element.definition}
     })
     .catch(function (error) {
       if (error.response.status == 404) {
-        bot.sendMessage(
-          chatId,
-          `Sorry no definition found 😞😞
+        // bot.sendMessage(
+        //   chatId,
+        //   `Sorry no definition found 😞😞
 
-          Trying Urban Dictionary
-          `
-        );
-        urbanDic(msg, match);
+        //   Trying Urban Dictionary
+        //   `
+        // );
+        wordnik(msg, match);
       } else {
         bot.sendMessage(
           chatId,
