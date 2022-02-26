@@ -24,6 +24,76 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
+
+
+const token = process.env.TELEGRAM_TOKEN;
+const RapidApitoken = process.env.rapid;
+const mdapi = process.env.mdapi;
+const wordnik_api = process.env.wordnik_api;
+let bot;
+
+if (process.env.NODE_ENV === "production") {
+  bot = new TelegramBot(token);
+  bot.setWebHook(process.env.HEROKU_URL + bot.token);
+} else {
+  bot = new TelegramBot(token, { polling: true });
+}
+
+
+//functions
+function wordnik(msg,match) 
+{
+  const chatId = msg.chat.id;
+  const word = match[1];
+  let numberOfDef;
+  var axios = require('axios');
+
+var config = {
+  method: 'get',
+  url: `https://api.wordnik.com/v4/word.json/${word}/definitions?limit=7&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=1unu9ftgcqef2drgpzj1n4m3t8xx9d9ph0yrtk8uly9929k92`,
+  headers: { 
+    'wordnik': wordnik_api
+  }
+};
+
+axios(config)
+.then(function (response) {
+  let responseData = response.data;
+  let message =`${responseData.length} definitions found for ${word}
+  
+  `
+
+  responseData.forEach((element, index) => { 
+    message += `(${++index})  ${element.partOfSpeech}:
+    ${element.text}
+
+
+    `
+
+   })
+
+
+   bot.sendMessage(chatId, message)
+})
+.catch(function (error) {
+
+  let querySe = encodeURI(word)
+  bot.sendMessage(
+    chatId,
+    `Sorry no definition found
+
+
+I would suggest you to google it 
+here's the link 
+https://www.google.com/search?q=${querySe}
+    `
+
+  );
+});
+
+}
+
+
 function urbanDic(msg, match) {
   const chatId = msg.chat.id;
   const word = match[1];
@@ -84,32 +154,20 @@ Example: ${example}
     })
     .catch(function (error) {
       console.log(error);
-      let querySe = encodeURI(word)
       bot.sendMessage(
         chatId,
         `Sorry no definition found in Urban Dictionary😞😞
 
-
-I would suggest you to google it 
-here's the link 
-https://www.google.com/search?q=${querySe}
+        trying other dictionar
         `
 
       );
+
+      wordnik(msg,match)
     });
 }
 
-const token = process.env.TELEGRAM_TOKEN;
-const RapidApitoken = process.env.rapid;
-const mdapi = process.env.mdapi;
-let bot;
 
-if (process.env.NODE_ENV === "production") {
-  bot = new TelegramBot(token);
-  bot.setWebHook(process.env.HEROKU_URL + bot.token);
-} else {
-  bot = new TelegramBot(token, { polling: true });
-}
 
 // Start command
 bot.onText(/\/start/, (msg) => {
