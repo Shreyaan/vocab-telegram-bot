@@ -158,7 +158,7 @@ Example: ${example}
         chatId,
         `Sorry no definition found in Urban Dictionary😞😞
 
-        trying other dictionar
+        trying other dictionary
         `
 
       );
