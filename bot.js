@@ -262,6 +262,11 @@ bot.onText(/\/urban (.+)/, (msg, match) => {
   urbanDic(msg, match);
 });
 
+//gets word from wordnik
+bot.onText(/\/wordnik (.+)/, (msg, match) => {
+  wordnik(msg, match);
+});
+
 // gives random word
 bot.onText(/\/random/, (msg) => {
   let lineNo = getRandomInt(0, 5348);
