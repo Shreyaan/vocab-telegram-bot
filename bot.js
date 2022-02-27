@@ -45,12 +45,12 @@ function wordnik(msg,match)
 {
   const chatId = msg.chat.id;
   const word = match[1];
-  word = word.toLowerCase();
+  let CapitalWord = word.toLowerCase();
   var axios = require('axios');
 
 var config = {
   method: 'get',
-  url: `https://api.wordnik.com/v4/word.json/${word}/definitions?limit=7&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=1unu9ftgcqef2drgpzj1n4m3t8xx9d9ph0yrtk8uly9929k92`,
+  url: `https://api.wordnik.com/v4/word.json/${CapitalWord}/definitions?limit=7&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=1unu9ftgcqef2drgpzj1n4m3t8xx9d9ph0yrtk8uly9929k92`,
   headers: { 
     'wordnik': wordnik_api
   }
