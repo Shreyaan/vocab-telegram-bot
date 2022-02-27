@@ -73,7 +73,7 @@ axios(config)
    })
 
 
-   bot.sendMessage(chatId, message, parse_mode='HTML')
+   bot.sendMessage(chatId, message)
 })
 .catch(function (error) {
 
