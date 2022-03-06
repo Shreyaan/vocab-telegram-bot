@@ -24,8 +24,6 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
-
-
 const token = process.env.TELEGRAM_TOKEN;
 const RapidApitoken = process.env.rapid;
 const mdapi = process.env.mdapi;
@@ -39,60 +37,51 @@ if (process.env.NODE_ENV === "production") {
   bot = new TelegramBot(token, { polling: true });
 }
 
-
 //functions
-function wordnik(msg,match) 
-{
+function wordnik(msg, match) {
   const chatId = msg.chat.id;
   const word = match[1];
   let CapitalWord = word.toLowerCase();
-  var axios = require('axios');
+  var axios = require("axios");
 
-var config = {
-  method: 'get',
-  url: `https://api.wordnik.com/v4/word.json/${CapitalWord}/definitions?limit=7&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=1unu9ftgcqef2drgpzj1n4m3t8xx9d9ph0yrtk8uly9929k92`,
-  headers: { 
-    'wordnik': wordnik_api
-  }
-};
+  var config = {
+    method: "get",
+    url: `https://api.wordnik.com/v4/word.json/${CapitalWord}/definitions?limit=7&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=1unu9ftgcqef2drgpzj1n4m3t8xx9d9ph0yrtk8uly9929k92`,
+    headers: {
+      wordnik: wordnik_api,
+    },
+  };
 
-axios(config)
-.then(function (response) {
-  let responseData = response.data;
-  let message =`${responseData.length} definitions found for ${word}
+  axios(config)
+    .then(function (response) {
+      let responseData = response.data;
+      let message = `${responseData.length} definitions found for ${word}
   
-  `
+  `;
 
-  responseData.forEach((element, index) => { 
-    message += `(${++index})  ${element.partOfSpeech}:
+      responseData.forEach((element, index) => {
+        message += `(${++index})  ${element.partOfSpeech}:
     ${element.text}
 
 
-    `
+    `;
+      });
 
-   })
-
-
-   bot.sendMessage(chatId, message)
-})
-.catch(function (error) {
-
-  bot.sendMessage(
-    chatId,
-    `Sorry no definition found 😔😔
+      bot.sendMessage(chatId, message);
+    })
+    .catch(function (error) {
+      bot.sendMessage(
+        chatId,
+        `Sorry no definition found 😔😔
 
 
     Trying Urban Dictionary
     `
+      );
 
-  );
-
-  urbanDic(msg,match)
-
-});
-
+      urbanDic(msg, match);
+    });
 }
-
 
 function urbanDic(msg, match) {
   const chatId = msg.chat.id;
@@ -154,7 +143,7 @@ Example: ${example}
     })
     .catch(function (error) {
       console.log(error);
-      let querySe = encodeURI(word)
+      let querySe = encodeURI(word);
       bot.sendMessage(
         chatId,
         `Sorry no definition found
@@ -164,12 +153,9 @@ Example: ${example}
     here's the link 
     https://www.google.com/search?q=${querySe}
         `
-    
       );
     });
 }
-
-
 
 // Start command
 bot.onText(/\/start/, (msg) => {
