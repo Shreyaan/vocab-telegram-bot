@@ -4,7 +4,7 @@
 ## Features
 /word (word) for definition of a word
 
-/random for random word
+/random for random word 
 
 /urban- get definition from Urban Dictionary
 
