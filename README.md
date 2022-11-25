@@ -23,7 +23,7 @@ you've just cloned!!
 ```
 
 ### Usage
-Before running this bot, first add rapid api key , TELEGRAM_TOKEN in .env file or in heroku's Config Vars (if you are using heroku remember to also add HEROKU_URL) 
+Before running this bot, first add rapid api key , TELEGRAM_TOKEN in .env file or in heroku/raliway Config Vars (if you are using heroku/railway remember to also add HEROKU_URL which contains the url of the deployment) 
 You can get telegram token from https://t.me/botfather
 
 ```bash
