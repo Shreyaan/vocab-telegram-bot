@@ -31,4 +31,4 @@ You can get telegram token from https://t.me/botfather
 ```
 
 ## Special Thanks to
-* https://www.npmjs.com/package/learn-a-word for csv file.
+* https://www.npmjs.com/package/learn-a-word for csv file.  
