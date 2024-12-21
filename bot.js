@@ -144,7 +144,6 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/word (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const word = match[1];
-  axios;
 
   var options = {
     method: "GET",
@@ -159,11 +158,15 @@ bot.onText(/\/word (.+)/, (msg, match) => {
     .request(options)
     .then(function (response) {
       let responseData = response.data;
-      let wordResponse = responseData["word"];
+      // If no definitions found, fall back to wordnik
+      if (!responseData.definitions || responseData.definitions.length <= 0) {
+        return wordnik(msg, match);
+      }
 
+      let wordResponse = responseData.word;
       let definationString = "";
 
-      responseData["definitions"].forEach((element, index) => {
+      responseData.definitions.forEach((element, index) => {
         definationString += `
 ${++index}:
 CATEGORY: ${element.partOfSpeech}
@@ -172,47 +175,20 @@ DEFINITION:${element.definition}
         `;
       });
 
-      if (responseData["definitions"].length <= 0) {
-        // bot.sendMessage(
-        //   chatId,
-        //   `Sorry no definition found 😞😞
+      return bot.sendMessage(
+        chatId,
+        `Word: ${wordResponse}
 
-        //   Trying Urban Dictionary
-        //   `
-        // );
+${responseData.definitions.length} definition(s) found for the word
 
-        wordnik(msg, match);
-      } else {
-        bot.sendMessage(
-          chatId,
-          `Word: ${wordResponse}
-  
-  ${responseData["definitions"].length} definition(s) found for the word
-  
-  Definition(s): ${definationString}
-           `
-        );
-      }
+Definition(s): ${definationString}
+         `
+      );
     })
     .catch(function (error) {
-      if (error.response.status == 404) {
-        // bot.sendMessage(
-        //   chatId,
-        //   `Sorry no definition found 😞😞
-
-        //   Trying Urban Dictionary
-        //   `
-        // );
-        wordnik(msg, match);
-      } else {
-        bot.sendMessage(
-          chatId,
-          `there has been an unexpected error
-${error} 
-please contact dev at @bruh7814
-      `
-        );
-      }
+      console.error("Error fetching definition:", error.message);
+      // Fallback to wordnik for any error
+      return wordnik(msg, match);
     });
 });
 
