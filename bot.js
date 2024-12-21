@@ -86,73 +86,45 @@ function wordnik(msg, match) {
 function urbanDic(msg, match) {
   const chatId = msg.chat.id;
   const word = match[1];
-  let numberOfDef;
-  axios;
 
-  var options = {
-    method: "GET",
-    url: "https://mashape-community-urban-dictionary.p.rapidapi.com/define",
-    params: { term: word },
-    headers: {
-      "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com",
-      "x-rapidapi-key": RapidApitoken,
-    },
-  };
+  const url = `https://unofficialurbandictionaryapi.com/api/search?term=${encodeURIComponent(
+    word
+  )}&strict=false&matchCase=false&limit=4&page=1&multiPage=false`;
 
   axios
-    .request(options)
+    .get(url)
     .then(function (response) {
-      let responseData = response.data;
-      let defination = responseData["list"][0]["definition"];
-      let example = responseData["list"][0]["example"];
+      const { data, found } = response.data;
 
-      if (numberOfDef == null || numberOfDef == undefined) {
-        bot.sendMessage(
-          chatId,
-          `Word: ${word}
-
-${responseData["list"].length} definition(s) found for the word
-
-DEFINITION: ${defination}
-
-Example: ${example}
-
-
-You can see other definitions here: https://www.urbandictionary.com/define.php?term=${encodeURI(
-            word
-          )}
-
-          
-    `
-        );
-      } else {
-        numberOfDef = parseInt(numberOfDef);
-        bot.sendMessage(
-          chatId,
-          `Word: ${word}
-${responseData["list"].length} definition(s) found for the word
-
-DEFINITION: ${responseData["list"][++numberOfDef]["definition"]}
-
-Example: ${example}
-
-
-    `
-        );
+      if (!found || data.length === 0) {
+        throw new Error("No definitions found");
       }
+
+      const firstDef = data[0];
+      const message = `Word: ${word}
+
+${data.length} definition(s) found
+
+DEFINITION: ${firstDef.meaning}
+
+Example: ${firstDef.example}
+
+You can see other definitions here: https://www.urbandictionary.com/define.php?term=${encodeURIComponent(
+        word
+      )}`;
+
+      bot.sendMessage(chatId, message);
     })
     .catch(function (error) {
-      console.log(error);
-      let querySe = encodeURI(word);
+      console.error("Urban Dictionary API error:", error);
+      const querySe = encodeURIComponent(word);
       bot.sendMessage(
         chatId,
         `Sorry no definition found
     
-    
-    I would suggest you to google it 
-    here's the link 
-    https://www.google.com/search?q=${querySe}
-        `
+I would suggest you to google it 
+here's the link 
+https://www.google.com/search?q=${querySe}`
       );
     });
 }
