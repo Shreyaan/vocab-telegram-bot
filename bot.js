@@ -42,7 +42,6 @@ function wordnik(msg, match) {
   const chatId = msg.chat.id;
   const word = match[1];
   let CapitalWord = word.toLowerCase();
-  var axios = require("axios");
 
   var config = {
     method: "get",
@@ -55,16 +54,21 @@ function wordnik(msg, match) {
   axios(config)
     .then(function (response) {
       let responseData = response.data;
-      let message = `${responseData.length} definitions found for ${word}
-  
-  `;
+
+      // Check if we have valid definitions
+      if (!responseData || responseData.length === 0 || !responseData[0].text) {
+        throw new Error("No valid definitions found");
+      }
+
+      let message = `${responseData.length} definitions found for ${word}\n\n`;
 
       responseData.forEach((element, index) => {
-        message += `(${++index})  ${element.partOfSpeech}:
-    ${element.text}
-
-
-    `;
+        // Only add definition if text and partOfSpeech exist
+        if (element.text && element.partOfSpeech) {
+          message += `(${index + 1})  ${element.partOfSpeech}:\n    ${
+            element.text
+          }\n\n`;
+        }
       });
 
       bot.sendMessage(chatId, message);
@@ -72,13 +76,8 @@ function wordnik(msg, match) {
     .catch(function (error) {
       bot.sendMessage(
         chatId,
-        `Sorry no definition found 😔😔
-
-
-    Trying Urban Dictionary
-    `
+        `Sorry no definition found 😔😔\n\nTrying Urban Dictionary`
       );
-
       urbanDic(msg, match);
     });
 }
